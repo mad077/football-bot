@@ -56,12 +56,13 @@ def home():
 
     for item in latest:
 
-       cards += f"""
+     cards += f"""
 
 <div class="relative overflow-hidden
 bg-gradient-to-br from-gray-900 via-gray-800 to-black
 p-6 rounded-3xl shadow-2xl border border-gray-700
-hover:border-green-400 transition duration-300">
+hover:border-green-400 transition duration-300
+animate-fadeIn">
 
     <!-- LIVE -->
 
@@ -81,9 +82,9 @@ hover:border-green-400 transition duration-300">
 
     </div>
 
-    <!-- Teams -->
+    <!-- Match -->
 
-    <div class="grid grid-cols-3 items-center text-center mt-8">
+    <div class="grid grid-cols-3 items-center text-center mt-10">
 
         <!-- Team 1 -->
 
@@ -91,9 +92,9 @@ hover:border-green-400 transition duration-300">
 
             <img
             src="https://cdn-icons-png.flaticon.com/512/53/53283.png"
-            class="w-16 mx-auto mb-3 opacity-80">
+            class="w-20 mx-auto mb-3 opacity-90">
 
-            <h2 class="text-2xl font-bold">
+            <h2 class="text-3xl font-extrabold">
 
                 {item.get("event","").split(" vs ")[0] if "vs" in item.get("event","") else item.get("event","")}
 
@@ -101,19 +102,19 @@ hover:border-green-400 transition duration-300">
 
         </div>
 
-        <!-- Score -->
+        <!-- SCORE -->
 
         <div>
 
-            <div class="text-6xl font-extrabold text-green-400 animate-pulse">
+            <div class="text-7xl font-black text-green-400 animate-pulse drop-shadow-lg">
 
                 2 - 1
 
             </div>
 
-            <div class="mt-3 text-yellow-400 font-bold">
+            <div class="mt-4 text-yellow-400 font-bold text-lg animate-bounce">
 
-                ⚽ هدف 78'
+                ⚽ GOAL 78'
 
             </div>
 
@@ -125,9 +126,9 @@ hover:border-green-400 transition duration-300">
 
             <img
             src="https://cdn-icons-png.flaticon.com/512/53/53283.png"
-            class="w-16 mx-auto mb-3 opacity-80">
+            class="w-20 mx-auto mb-3 opacity-90">
 
-            <h2 class="text-2xl font-bold">
+            <h2 class="text-3xl font-extrabold">
 
                 {item.get("event","").split(" vs ")[1] if "vs" in item.get("event","") else ""}
 
@@ -137,42 +138,52 @@ hover:border-green-400 transition duration-300">
 
     </div>
 
-    <!-- Stats -->
+    <!-- Timeline -->
 
-    <div class="grid grid-cols-2 gap-4 mt-8">
+    <div class="mt-8 bg-black/40 backdrop-blur-lg
+    rounded-2xl p-5 border border-gray-700">
 
-        <!-- Possession -->
+        <h3 class="text-green-400 text-xl font-bold mb-4">
 
-        <div class="bg-gray-950 p-4 rounded-2xl border border-gray-800">
+            ⚽ Goals Timeline
 
-            <p class="text-gray-400 mb-2">
-                📈 الاستحواذ
-            </p>
+        </h3>
 
-            <div class="w-full bg-gray-700 rounded-full h-4 overflow-hidden">
+        <div class="space-y-3">
 
-                <div class="bg-green-400 h-4 rounded-full"
-                style="width:65%"></div>
+            <div class="flex justify-between items-center">
+
+                <span class="text-green-400 font-bold">
+                    ⚽ Ronaldo
+                </span>
+
+                <span class="text-gray-300">
+                    12'
+                </span>
 
             </div>
 
-            <p class="mt-2 text-sm text-gray-300">
-                65%
-            </p>
+            <div class="flex justify-between items-center">
 
-        </div>
+                <span class="text-yellow-400 font-bold">
+                    🟨 Militao
+                </span>
 
-        <!-- Cards -->
+                <span class="text-gray-300">
+                    44'
+                </span>
 
-        <div class="bg-gray-950 p-4 rounded-2xl border border-gray-800">
+            </div>
 
-            <p class="text-gray-400 mb-2">
-                🟨 البطاقات
-            </p>
+            <div class="flex justify-between items-center">
 
-            <div class="text-2xl">
+                <span class="text-green-400 font-bold">
+                    ⚽ Neymar
+                </span>
 
-                🟨 🟨 🟥
+                <span class="text-gray-300">
+                    78'
+                </span>
 
             </div>
 
@@ -180,10 +191,10 @@ hover:border-green-400 transition duration-300">
 
     </div>
 
-    <!-- AI Comment -->
+    <!-- AI COMMENT -->
 
-    <div class="bg-black/40 backdrop-blur-lg
-    p-5 rounded-2xl border border-gray-700 mt-6">
+    <div class="bg-black/50 mt-6 p-5 rounded-2xl
+    border border-gray-700">
 
         <p class="text-lg text-gray-200 leading-8">
 
@@ -193,15 +204,17 @@ hover:border-green-400 transition duration-300">
 
     </div>
 
-    <!-- Goal Animation -->
+    <!-- Animated Ball -->
 
-    <div class="absolute -bottom-8 -right-8 text-[120px] opacity-10 animate-bounce">
+    <div class="absolute -bottom-8 -right-8
+    text-[140px] opacity-10 animate-bounce">
 
         ⚽
 
     </div>
 
 </div>
+
 
 
         """
@@ -214,30 +227,29 @@ hover:border-green-400 transition duration-300">
 
 <head>
 
-<meta charset="UTF-8">
+<style>
 
-<title>⚽ Live VAR Dashboard</title>
+@keyframes fadeIn {
 
-<!-- تحديث تلقائي -->
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
 
-<meta http-equiv="refresh" content="5">
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 
-<!-- PWA -->
+}
 
-<meta name="theme-color" content="#111827">
+.animate-fadeIn {
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    animation: fadeIn 0.8s ease;
 
-<link rel="manifest" href="/manifest.json">
+}
 
-<!-- Tailwind -->
-
-<script src="https://cdn.tailwindcss.com"></script>
-
-<!-- Chart -->
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
+</style>
 </head>
 
 <body class="bg-gray-950 text-white min-h-screen p-6">
