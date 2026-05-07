@@ -55,7 +55,7 @@ hover:border-green-400 transition duration-300
 animate-fadeIn mb-6"
 
 style="
-background-image:url('https://images.unsplash.com/photo-1574629810360-7efbbe195018?q=80&w=1600');
+background-image:url('https://images.unsplash.com/photo-1517927033932-b3d18e61fb3a?auto=format&fit=crop&w=1600&q=80');
 background-size:cover;
 background-position:center;
 background-blend-mode:overlay;
