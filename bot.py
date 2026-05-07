@@ -1,34 +1,46 @@
-import time
 import json
+import os
 import random
-import requests
+import time
 from datetime import datetime
-
-# ====================================
-# API
-# ====================================
-
-API_KEY = ""
-
-# ====================================
-# TELEGRAM
-# ====================================
-
-TELEGRAM_TOKEN = ""
-
-CHAT_ID = ""
-
-# ====================================
-# FILE
-# ====================================
 
 MEMORY_FILE = "memory.json"
 
-# ====================================
-# تحميل البيانات
+TEAMS = [
+
+    ("الهلال", "النصر"),
+    ("برشلونة", "ريال مدريد"),
+    ("مانشستر سيتي", "ليفربول"),
+    ("ميلان", "يوفنتوس")
+
+]
+
+COMMENTS = [
+
+    "واضح المباراة دخلت طور الجنون 🔥",
+    "الدفاع اليوم بإجازة 😂",
+    "الاستحواذ نار من الفريقين ⚽",
+    "المباراة مفتوحة هجوميًا 👀"
+
+]
+
+PLAYERS = [
+
+    "Ronaldo",
+    "Neymar",
+    "Messi",
+    "Mbappe",
+    "Vinicius"
+
+]
+
 # ====================================
 
 def load_memory():
+
+    if not os.path.exists(MEMORY_FILE):
+
+        return []
 
     try:
 
@@ -41,8 +53,6 @@ def load_memory():
         return []
 
 # ====================================
-# حفظ البيانات
-# ====================================
 
 def save_memory(data):
 
@@ -51,168 +61,77 @@ def save_memory(data):
         json.dump(data, f, ensure_ascii=False, indent=4)
 
 # ====================================
-# TELEGRAM
-# ====================================
 
-def send_notification(message):
-
-    url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
-
-    requests.post(url, data={
-
-        "chat_id": CHAT_ID,
-
-        "text": message
-
-    })
-
-# ====================================
-# المباريات المباشرة
-# ====================================
-
-def get_live_matches():
-
-    url = "https://api.football-data.org/v4/matches"
-
-    headers = {
-
-        "X-Auth-Token": API_KEY
-
-    }
-
-    response = requests.get(url, headers=headers)
-
-    data = response.json()
-
-    return data.get("matches", [])
-
-# ====================================
-# AI تعليق ذكي
-# ====================================
-
-def generate_comment(home, away, home_score, away_score):
-
-    if home_score > away_score:
-
-        return f"واضح {home} مسيطر على المباراة اليوم 🔥"
-
-    elif away_score > home_score:
-
-        return f"{away} داخل المباراة بثقة كبيرة 😅"
-
-    else:
-
-        comments = [
-
-            f"مباراة {home} و {away} مشتعلة تكتيكيًا 👀",
-
-            f"واضح الفريقين داخلين بحذر شديد 😅",
-
-            f"الجماهير تنتظر هدف يفك الاشتباك 😂"
-
-        ]
-
-        return random.choice(comments)
-
-# ====================================
-# START
-# ====================================
-
-print("🚀 Live Football System Running...\n")
-
-send_notification("🔥 نظام المباريات المباشرة يعمل الآن")
-
-memory = load_memory()
-
-# حفظ آخر النتائج
-LAST_SCORES = {}
-
-# ====================================
-# LOOP
-# ====================================
+print("🚀 Dynamic Football Engine Running...\n")
 
 while True:
 
-    try:
+    memory = load_memory()
 
-        matches = get_live_matches()
+    home, away = random.choice(TEAMS)
 
-        for match in matches:
+    home_score = random.randint(0, 4)
 
-            home = match["homeTeam"]["name"]
+    away_score = random.randint(0, 4)
 
-            away = match["awayTeam"]["name"]
+    possession = random.randint(45, 75)
 
-            status = match["status"]
+    shots = random.randint(5, 20)
 
-            if status != "LIVE":
-                continue
+    corners = random.randint(1, 10)
 
-            home_score = match["score"]["fullTime"]["home"]
+    yellow_cards = random.randint(0, 5)
 
-            away_score = match["score"]["fullTime"]["away"]
+    minute = random.randint(1, 90)
 
-            # معالجة None
+    prediction = random.randint(50, 90)
 
-            if home_score is None:
-                home_score = 0
+    timeline = [
 
-            if away_score is None:
-                away_score = 0
+        f"⚽ {random.choice(PLAYERS)} {random.randint(1,90)}'",
 
-            match_key = f"{home}-{away}"
+        f"🟨 {random.choice(PLAYERS)} {random.randint(1,90)}'",
 
-            current_score = f"{home_score}-{away_score}"
+        f"⚽ {random.choice(PLAYERS)} {random.randint(1,90)}'"
 
-            # إذا تغيرت النتيجة = هدف جديد
+    ]
 
-            if LAST_SCORES.get(match_key) != current_score:
+    item = {
 
-                LAST_SCORES[match_key] = current_score
+        "time": datetime.now().strftime("%H:%M:%S"),
 
-                comment = generate_comment(
+        "home": home,
 
-                    home,
-                    away,
-                    home_score,
-                    away_score
+        "away": away,
 
-                )
+        "home_score": home_score,
 
-                now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        "away_score": away_score,
 
-                item = {
+        "possession": possession,
 
-                    "time": now,
+        "shots": shots,
 
-                    "event": f"{home} {home_score}-{away_score} {away}",
+        "corners": corners,
 
-                    "reply": comment
+        "yellow_cards": yellow_cards,
 
-                }
+        "minute": minute,
 
-                memory.append(item)
+        "prediction": prediction,
 
-                save_memory(memory)
+        "timeline": timeline,
 
-                print(f"⚽ {home} {home_score}-{away_score} {away}")
+        "reply": random.choice(COMMENTS)
 
-                print(f"🤖 {comment}")
+    }
 
-                print("-" * 50)
+    memory.append(item)
 
-                # إشعار الجوال
+    memory = memory[-20:]
 
-                send_notification(
+    save_memory(memory)
 
-                    f"🔥 هدف أو تحديث جديد!\n\n⚽ {home} {home_score}-{away_score} {away}\n\n🤖 {comment}"
+    print(f"⚽ {home} {home_score}-{away_score} {away}")
 
-                )
-
-                time.sleep(5)
-
-    except Exception as e:
-
-        print("❌ ERROR:", e)
-
-    time.sleep(60)
+    time.sleep(10)

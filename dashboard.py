@@ -1,14 +1,13 @@
 from flask import Flask, render_template_string
 import json
 import os
-import random
 
 app = Flask(__name__)
 
 MEMORY_FILE = "memory.json"
 
 # ====================================
-# قراءة البيانات
+# Load Data
 # ====================================
 
 def load_data():
@@ -28,7 +27,7 @@ def load_data():
         return []
 
 # ====================================
-# الصفحة الرئيسية
+# Home
 # ====================================
 
 @app.route("/")
@@ -36,15 +35,11 @@ def home():
 
     data = load_data()[::-1]
 
-    latest = data[:20]
-
     cards = ""
 
-    for item in latest:
+    for item in data:
 
-        possession = random.randint(45, 75)
-
-        prediction = random.randint(55, 90)
+        possession = item.get("possession", 50)
 
         cards += f"""
 
@@ -52,7 +47,7 @@ def home():
 bg-gradient-to-br from-gray-900 via-gray-800 to-black
 p-6 rounded-3xl shadow-2xl border border-gray-700
 hover:border-green-400 transition duration-300
-animate-fadeIn mb-6"
+animate-fadeIn mb-8"
 
 style="
 background-image:url('https://images.unsplash.com/photo-1517927033932-b3d18e61fb3a?auto=format&fit=crop&w=1600&q=80');
@@ -63,7 +58,7 @@ background-blend-mode:overlay;
 
     <!-- Overlay -->
 
-    <div class="absolute inset-0 bg-black/70"></div>
+    <div class="absolute inset-0 bg-black/75"></div>
 
     <!-- Content -->
 
@@ -91,7 +86,7 @@ background-blend-mode:overlay;
 
         <div class="grid grid-cols-3 items-center text-center mt-12">
 
-            <!-- Team 1 -->
+            <!-- Home -->
 
             <div>
 
@@ -101,19 +96,19 @@ background-blend-mode:overlay;
 
                 <h2 class="text-3xl font-extrabold text-white">
 
-                    {item.get("event","").split(" vs ")[0] if "vs" in item.get("event","") else item.get("event","")}
+                    {item.get("home","")}
 
                 </h2>
 
             </div>
 
-            <!-- SCORE -->
+            <!-- Score -->
 
             <div>
 
                 <div class="text-7xl font-black text-green-400 animate-pulse drop-shadow-lg">
 
-                    2 - 1
+                    {item.get("home_score",0)} - {item.get("away_score",0)}
 
                 </div>
 
@@ -129,7 +124,7 @@ background-blend-mode:overlay;
 
                     <div class="text-yellow-400 font-black text-2xl relative">
 
-                        ⚽ GOAL 78'
+                        ⚽ {item.get("minute",0)}'
 
                     </div>
 
@@ -137,7 +132,7 @@ background-blend-mode:overlay;
 
             </div>
 
-            <!-- Team 2 -->
+            <!-- Away -->
 
             <div>
 
@@ -147,7 +142,7 @@ background-blend-mode:overlay;
 
                 <h2 class="text-3xl font-extrabold text-white">
 
-                    {item.get("event","").split(" vs ")[1] if "vs" in item.get("event","") else ""}
+                    {item.get("away","")}
 
                 </h2>
 
@@ -155,22 +150,78 @@ background-blend-mode:overlay;
 
         </div>
 
-        <!-- Possession -->
+        <!-- Live Stats -->
 
-        <div class="mt-8 bg-black/40 p-5 rounded-2xl border border-gray-700">
+        <div class="grid md:grid-cols-4 gap-4 mt-8">
 
-            <div class="flex justify-between text-sm mb-2 text-white">
+            <!-- Possession -->
 
-                <span>📈 الاستحواذ</span>
+            <div class="bg-black/40 p-4 rounded-2xl border border-gray-700">
 
-                <span>{possession}%</span>
+                <p class="text-gray-300 mb-2">
+                    📈 الاستحواذ
+                </p>
+
+                <div class="w-full bg-gray-700 h-4 rounded-full overflow-hidden">
+
+                    <div class="bg-green-400 h-4 rounded-full animate-pulse"
+                    style="width:{possession}%"></div>
+
+                </div>
+
+                <p class="mt-2 text-white font-bold">
+
+                    {possession}%
+
+                </p>
 
             </div>
 
-            <div class="w-full bg-gray-700 h-5 rounded-full overflow-hidden">
+            <!-- Shots -->
 
-                <div class="bg-green-400 h-5 animate-pulse rounded-full"
-                style="width:{possession}%"></div>
+            <div class="bg-black/40 p-4 rounded-2xl border border-gray-700">
+
+                <p class="text-gray-300">
+                    🎯 التسديدات
+                </p>
+
+                <h2 class="text-4xl mt-3 text-green-400 font-black">
+
+                    {item.get("shots",0)}
+
+                </h2>
+
+            </div>
+
+            <!-- Corners -->
+
+            <div class="bg-black/40 p-4 rounded-2xl border border-gray-700">
+
+                <p class="text-gray-300">
+                    🚩 الركنيات
+                </p>
+
+                <h2 class="text-4xl mt-3 text-green-400 font-black">
+
+                    {item.get("corners",0)}
+
+                </h2>
+
+            </div>
+
+            <!-- Cards -->
+
+            <div class="bg-black/40 p-4 rounded-2xl border border-gray-700">
+
+                <p class="text-gray-300">
+                    🟨 البطاقات
+                </p>
+
+                <h2 class="text-4xl mt-3 text-yellow-400 font-black">
+
+                    {item.get("yellow_cards",0)}
+
+                </h2>
 
             </div>
 
@@ -181,7 +232,7 @@ background-blend-mode:overlay;
         <div class="mt-8 bg-black/40 backdrop-blur-lg
         rounded-2xl p-5 border border-gray-700">
 
-            <h3 class="text-green-400 text-xl font-bold mb-4">
+            <h3 class="text-green-400 text-2xl font-bold mb-4">
 
                 ⚽ Goals Timeline
 
@@ -189,41 +240,27 @@ background-blend-mode:overlay;
 
             <div class="space-y-3 text-white">
 
-                <div class="flex justify-between items-center">
+                {
 
-                    <span class="text-green-400 font-bold">
-                        ⚽ Ronaldo
-                    </span>
+                "".join([
 
-                    <span>
-                        12'
-                    </span>
-
-                </div>
-
-                <div class="flex justify-between items-center">
-
-                    <span class="text-yellow-400 font-bold">
-                        🟨 Militao
-                    </span>
-
-                    <span>
-                        44'
-                    </span>
-
-                </div>
+                f'''
 
                 <div class="flex justify-between items-center">
 
                     <span class="text-green-400 font-bold">
-                        ⚽ Neymar
-                    </span>
-
-                    <span>
-                        78'
+                        {event}
                     </span>
 
                 </div>
+
+                '''
+
+                for event in item.get("timeline",[])
+
+                ])
+
+                }
 
             </div>
 
@@ -234,15 +271,15 @@ background-blend-mode:overlay;
         <div class="mt-6 bg-green-500/20 border border-green-400
         p-5 rounded-2xl">
 
-            <h3 class="text-green-400 font-bold text-xl mb-2">
+            <h3 class="text-green-400 font-bold text-2xl mb-2">
 
                 🧠 AI Prediction
 
             </h3>
 
-            <p class="text-white text-lg">
+            <p class="text-white text-xl">
 
-                🔥 فرصة الفوز: {prediction}%
+                🔥 فرصة الفوز: {item.get("prediction",50)}%
 
             </p>
 
@@ -253,7 +290,7 @@ background-blend-mode:overlay;
         <div class="bg-black/50 mt-6 p-5 rounded-2xl
         border border-gray-700">
 
-            <p class="text-lg text-gray-200 leading-8">
+            <p class="text-xl text-gray-200 leading-8">
 
                 🤖 {item.get("reply","")}
 
@@ -290,7 +327,7 @@ background-blend-mode:overlay;
 
 <title>⚽ Live VAR Dashboard</title>
 
-<meta http-equiv="refresh" content="5">
+<meta http-equiv="refresh" content="10">
 
 <script src="https://cdn.tailwindcss.com"></script>
 
@@ -326,6 +363,24 @@ body {{
 
 <body class="bg-black text-white min-h-screen p-6">
 
+<!-- Goal Popup -->
+
+<div id="goalPopup"
+class="fixed inset-0 flex items-center justify-center
+bg-black/80 z-50 hidden">
+
+    <div class="text-center animate-bounce">
+
+        <h1 class="text-8xl font-black text-yellow-400">
+
+            ⚽ GOAL!!!
+
+        </h1>
+
+    </div>
+
+</div>
+
 <div class="max-w-7xl mx-auto">
 
     <!-- Header -->
@@ -340,7 +395,7 @@ body {{
 
             </h1>
 
-            <p class="text-gray-400 mt-2">
+            <p class="text-gray-400 mt-2 text-lg">
 
                 منصة رياضية مباشرة مدعومة بالذكاء الاصطناعي
 
@@ -363,6 +418,26 @@ body {{
 
 </div>
 
+<!-- Goal Popup Script -->
+
+<script>
+
+setInterval(() => {{
+
+    const popup = document.getElementById("goalPopup");
+
+    popup.classList.remove("hidden");
+
+    setTimeout(() => {{
+
+        popup.classList.add("hidden");
+
+    }}, 2000);
+
+}}, 15000);
+
+</script>
+
 </body>
 
 </html>
@@ -372,7 +447,7 @@ body {{
     return render_template_string(html)
 
 # ====================================
-# تشغيل السيرفر
+# Run
 # ====================================
 
 if __name__ == "__main__":
