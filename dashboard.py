@@ -58,21 +58,66 @@ def home():
 
         cards += f"""
 
-        <div class="bg-gray-900 p-5 rounded-2xl shadow-lg border border-gray-800 hover:border-green-400 transition">
+<div class="bg-gradient-to-br from-gray-900 to-gray-800
+p-6 rounded-3xl shadow-2xl border border-gray-700
+hover:border-green-400 transition duration-300">
 
-            <p class="text-gray-400 text-sm">
-                ⏰ {item.get("time","")}
-            </p>
+    <!-- Header -->
 
-            <h2 class="text-2xl mt-2 text-green-400 font-bold">
-                ⚽ {item.get("event","")}
+    <div class="flex justify-between items-center mb-4">
+
+        <div class="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold animate-pulse">
+            🔴 LIVE
+        </div>
+
+        <div class="text-gray-400 text-sm">
+            ⏰ {item.get("time","")}
+        </div>
+
+    </div>
+
+    <!-- Teams -->
+
+    <div class="grid grid-cols-3 items-center text-center mb-6">
+
+        <div>
+
+            <h2 class="text-2xl font-bold">
+                {item.get("event","").split(" vs ")[0] if "vs" in item.get("event","") else item.get("event","")}
             </h2>
 
-            <p class="mt-3 text-lg">
-                🤖 {item.get("reply","")}
-            </p>
+        </div>
+
+        <div class="text-4xl font-extrabold text-green-400">
+
+            ⚽
 
         </div>
+
+        <div>
+
+            <h2 class="text-2xl font-bold">
+                {item.get("event","").split(" vs ")[1] if "vs" in item.get("event","") else ""}
+            </h2>
+
+        </div>
+
+    </div>
+
+    <!-- AI Comment -->
+
+    <div class="bg-gray-950 p-4 rounded-2xl border border-gray-800">
+
+        <p class="text-lg text-gray-200">
+
+            🤖 {item.get("reply","")}
+
+        </p>
+
+    </div>
+
+</div>
+
 
         """
 
