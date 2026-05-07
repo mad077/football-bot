@@ -1,7 +1,7 @@
 from flask import Flask, render_template_string
 import json
 import os
-from collections import Counter
+import random
 
 app = Flask(__name__)
 
@@ -34,190 +34,247 @@ def load_data():
 @app.route("/")
 def home():
 
-    data = load_data()
-
-    # ترتيب عكسي
-
-    data = data[::-1]
+    data = load_data()[::-1]
 
     latest = data[:20]
-
-    # تحليل الأحداث
-
-    events = [x["event"] for x in data]
-
-    counts = Counter(events)
-
-    labels = list(counts.keys())[:5]
-
-    values = list(counts.values())[:5]
 
     cards = ""
 
     for item in latest:
 
-     cards += f"""
+        possession = random.randint(45, 75)
+
+        prediction = random.randint(55, 90)
+
+        cards += f"""
 
 <div class="relative overflow-hidden
 bg-gradient-to-br from-gray-900 via-gray-800 to-black
 p-6 rounded-3xl shadow-2xl border border-gray-700
 hover:border-green-400 transition duration-300
-animate-fadeIn">
+animate-fadeIn mb-6"
 
-    <!-- LIVE -->
+style="
+background-image:url('https://images.unsplash.com/photo-1547347298-4074fc3086f0');
+background-size:cover;
+background-position:center;
+background-blend-mode:overlay;
+">
 
-    <div class="absolute top-4 left-4
-    bg-red-500 text-white px-3 py-1 rounded-full
-    text-sm font-bold animate-pulse shadow-lg">
+    <!-- Overlay -->
 
-        🔴 LIVE
+    <div class="absolute inset-0 bg-black/70"></div>
 
-    </div>
+    <!-- Content -->
 
-    <!-- Time -->
+    <div class="relative z-10">
 
-    <div class="absolute top-4 right-4 text-gray-400 text-sm">
+        <!-- LIVE -->
 
-        ⏰ {item.get("time","")}
+        <div class="absolute top-0 left-0
+        bg-red-500 text-white px-4 py-2 rounded-full
+        text-sm font-bold animate-pulse shadow-lg">
 
-    </div>
-
-    <!-- Match -->
-
-    <div class="grid grid-cols-3 items-center text-center mt-10">
-
-        <!-- Team 1 -->
-
-        <div>
-
-            <img
-            src="https://cdn-icons-png.flaticon.com/512/53/53283.png"
-            class="w-20 mx-auto mb-3 opacity-90">
-
-            <h2 class="text-3xl font-extrabold">
-
-                {item.get("event","").split(" vs ")[0] if "vs" in item.get("event","") else item.get("event","")}
-
-            </h2>
+            🔴 LIVE
 
         </div>
 
-        <!-- SCORE -->
+        <!-- Time -->
 
-        <div>
+        <div class="absolute top-0 right-0 text-gray-300 text-sm">
 
-            <div class="text-7xl font-black text-green-400 animate-pulse drop-shadow-lg">
-
-                2 - 1
-
-            </div>
-
-            <div class="mt-4 text-yellow-400 font-bold text-lg animate-bounce">
-
-                ⚽ GOAL 78'
-
-            </div>
+            ⏰ {item.get("time","")}
 
         </div>
 
-        <!-- Team 2 -->
+        <!-- Match -->
 
-        <div>
+        <div class="grid grid-cols-3 items-center text-center mt-12">
 
-            <img
-            src="https://cdn-icons-png.flaticon.com/512/53/53283.png"
-            class="w-20 mx-auto mb-3 opacity-90">
+            <!-- Team 1 -->
 
-            <h2 class="text-3xl font-extrabold">
+            <div>
 
-                {item.get("event","").split(" vs ")[1] if "vs" in item.get("event","") else ""}
+                <img
+                src="https://cdn-icons-png.flaticon.com/512/53/53283.png"
+                class="w-20 mx-auto mb-3 opacity-90">
 
-            </h2>
+                <h2 class="text-3xl font-extrabold text-white">
 
-        </div>
+                    {item.get("event","").split(" vs ")[0] if "vs" in item.get("event","") else item.get("event","")}
 
-    </div>
-
-    <!-- Timeline -->
-
-    <div class="mt-8 bg-black/40 backdrop-blur-lg
-    rounded-2xl p-5 border border-gray-700">
-
-        <h3 class="text-green-400 text-xl font-bold mb-4">
-
-            ⚽ Goals Timeline
-
-        </h3>
-
-        <div class="space-y-3">
-
-            <div class="flex justify-between items-center">
-
-                <span class="text-green-400 font-bold">
-                    ⚽ Ronaldo
-                </span>
-
-                <span class="text-gray-300">
-                    12'
-                </span>
+                </h2>
 
             </div>
 
-            <div class="flex justify-between items-center">
+            <!-- SCORE -->
 
-                <span class="text-yellow-400 font-bold">
-                    🟨 Militao
-                </span>
+            <div>
 
-                <span class="text-gray-300">
-                    44'
-                </span>
+                <div class="text-7xl font-black text-green-400 animate-pulse drop-shadow-lg">
+
+                    2 - 1
+
+                </div>
+
+                <!-- Goal Explosion -->
+
+                <div class="relative mt-4">
+
+                    <div class="text-yellow-400 font-black text-2xl animate-ping absolute inset-0">
+
+                        ⚽ GOAL!
+
+                    </div>
+
+                    <div class="text-yellow-400 font-black text-2xl relative">
+
+                        ⚽ GOAL 78'
+
+                    </div>
+
+                </div>
 
             </div>
 
-            <div class="flex justify-between items-center">
+            <!-- Team 2 -->
 
-                <span class="text-green-400 font-bold">
-                    ⚽ Neymar
-                </span>
+            <div>
 
-                <span class="text-gray-300">
-                    78'
-                </span>
+                <img
+                src="https://cdn-icons-png.flaticon.com/512/53/53283.png"
+                class="w-20 mx-auto mb-3 opacity-90">
+
+                <h2 class="text-3xl font-extrabold text-white">
+
+                    {item.get("event","").split(" vs ")[1] if "vs" in item.get("event","") else ""}
+
+                </h2>
 
             </div>
 
         </div>
 
-    </div>
+        <!-- Possession -->
 
-    <!-- AI COMMENT -->
+        <div class="mt-8 bg-black/40 p-5 rounded-2xl border border-gray-700">
 
-    <div class="bg-black/50 mt-6 p-5 rounded-2xl
-    border border-gray-700">
+            <div class="flex justify-between text-sm mb-2 text-white">
 
-        <p class="text-lg text-gray-200 leading-8">
+                <span>📈 الاستحواذ</span>
 
-            🤖 {item.get("reply","")}
+                <span>{possession}%</span>
 
-        </p>
+            </div>
 
-    </div>
+            <div class="w-full bg-gray-700 h-5 rounded-full overflow-hidden">
 
-    <!-- Animated Ball -->
+                <div class="bg-green-400 h-5 animate-pulse rounded-full"
+                style="width:{possession}%"></div>
 
-    <div class="absolute -bottom-8 -right-8
-    text-[140px] opacity-10 animate-bounce">
+            </div>
 
-        ⚽
+        </div>
+
+        <!-- Timeline -->
+
+        <div class="mt-8 bg-black/40 backdrop-blur-lg
+        rounded-2xl p-5 border border-gray-700">
+
+            <h3 class="text-green-400 text-xl font-bold mb-4">
+
+                ⚽ Goals Timeline
+
+            </h3>
+
+            <div class="space-y-3 text-white">
+
+                <div class="flex justify-between items-center">
+
+                    <span class="text-green-400 font-bold">
+                        ⚽ Ronaldo
+                    </span>
+
+                    <span>
+                        12'
+                    </span>
+
+                </div>
+
+                <div class="flex justify-between items-center">
+
+                    <span class="text-yellow-400 font-bold">
+                        🟨 Militao
+                    </span>
+
+                    <span>
+                        44'
+                    </span>
+
+                </div>
+
+                <div class="flex justify-between items-center">
+
+                    <span class="text-green-400 font-bold">
+                        ⚽ Neymar
+                    </span>
+
+                    <span>
+                        78'
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- AI Prediction -->
+
+        <div class="mt-6 bg-green-500/20 border border-green-400
+        p-5 rounded-2xl">
+
+            <h3 class="text-green-400 font-bold text-xl mb-2">
+
+                🧠 AI Prediction
+
+            </h3>
+
+            <p class="text-white text-lg">
+
+                🔥 فرصة الفوز: {prediction}%
+
+            </p>
+
+        </div>
+
+        <!-- AI Comment -->
+
+        <div class="bg-black/50 mt-6 p-5 rounded-2xl
+        border border-gray-700">
+
+            <p class="text-lg text-gray-200 leading-8">
+
+                🤖 {item.get("reply","")}
+
+            </p>
+
+        </div>
+
+        <!-- Animated Ball -->
+
+        <div class="absolute -bottom-8 -right-8
+        text-[140px] opacity-10 animate-bounce">
+
+            ⚽
+
+        </div>
 
     </div>
 
 </div>
 
-
-
-        """
+"""
 
     html = f"""
 
@@ -227,161 +284,84 @@ animate-fadeIn">
 
 <head>
 
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>⚽ Live VAR Dashboard</title>
+
+<meta http-equiv="refresh" content="5">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
 <style>
 
-@keyframes fadeIn {
+body {{
+    font-family: sans-serif;
+}}
 
-    from {
+@keyframes fadeIn {{
+
+    from {{
         opacity: 0;
         transform: translateY(20px);
-    }
+    }}
 
-    to {
+    to {{
         opacity: 1;
         transform: translateY(0);
-    }
+    }}
 
-}
+}}
 
-.animate-fadeIn {
+.animate-fadeIn {{
 
     animation: fadeIn 0.8s ease;
 
-}
+}}
 
 </style>
+
 </head>
 
-<body class="bg-gray-950 text-white min-h-screen p-6">
+<body class="bg-black text-white min-h-screen p-6">
 
 <div class="max-w-7xl mx-auto">
 
-<!-- Header -->
+    <!-- Header -->
 
-<div class="flex justify-between items-center mb-8">
+    <div class="flex justify-between items-center mb-10">
 
-    <div>
+        <div>
 
-        <h1 class="text-5xl font-bold text-green-400">
-            ⚽ Live VAR Dashboard
-        </h1>
+            <h1 class="text-5xl font-black text-green-400">
 
-        <p class="text-gray-400 mt-2">
-            غرفة أخبار رياضية مباشرة
-        </p>
+                ⚽ Live VAR Dashboard
 
-    </div>
+            </h1>
 
-    <div class="bg-green-500 text-black px-4 py-2 rounded-full font-bold shadow-lg animate-pulse">
-        🟢 LIVE
-    </div>
+            <p class="text-gray-400 mt-2">
 
-</div>
+                منصة رياضية مباشرة مدعومة بالذكاء الاصطناعي
 
-<!-- Popup -->
+            </p>
 
-<div class="fixed top-5 left-1/2 -translate-x-1/2 bg-green-500 text-black px-6 py-3 rounded-2xl shadow-2xl animate-bounce">
+        </div>
 
-🔥 يتم تحديث البيانات مباشرة
+        <div class="bg-red-500 px-5 py-3 rounded-full
+        animate-pulse font-bold shadow-lg">
 
-</div>
+            🔴 LIVE
 
-<!-- Stats -->
-
-<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-
-    <div class="bg-gray-900 p-5 rounded-2xl shadow-lg">
-
-        <p class="text-gray-400">
-            إجمالي الأحداث
-        </p>
-
-        <h2 class="text-4xl text-green-400 mt-2 font-bold">
-            {len(data)}
-        </h2>
+        </div>
 
     </div>
 
-    <div class="bg-gray-900 p-5 rounded-2xl shadow-lg">
+    <!-- Cards -->
 
-        <p class="text-gray-400">
-            آخر مباراة
-        </p>
-
-        <h2 class="text-2xl mt-2">
-            {latest[0]["event"] if latest else "لا يوجد"}
-        </h2>
-
-    </div>
-
-    <div class="bg-gray-900 p-5 rounded-2xl shadow-lg">
-
-        <p class="text-gray-400">
-            حالة النظام
-        </p>
-
-        <h2 class="text-2xl text-green-400 mt-2">
-            🟢 يعمل
-        </h2>
-
-    </div>
+    {cards}
 
 </div>
-
-<!-- Chart -->
-
-<div class="bg-gray-900 p-6 rounded-2xl shadow-lg mb-8">
-
-    <h2 class="text-2xl mb-4 text-green-400">
-        📊 أكثر المباريات نشاطًا
-    </h2>
-
-    <canvas id="chart"></canvas>
-
-</div>
-
-<!-- Live Feed -->
-
-<div>
-
-    <h2 class="text-3xl mb-4 text-green-400 font-bold">
-        ⚽ البث المباشر
-    </h2>
-
-    <div class="grid gap-4">
-
-        {cards}
-
-    </div>
-
-</div>
-
-</div>
-
-<!-- Chart Script -->
-
-<script>
-
-const ctx = document.getElementById('chart');
-
-new Chart(ctx, {{
-
-    type: 'bar',
-
-    data: {{
-
-        labels: {labels},
-
-        datasets: [{{
-            label: 'عدد الأحداث',
-            data: {values},
-        }}]
-
-    }}
-
-}});
-
-</script>
 
 </body>
 
@@ -392,32 +372,11 @@ new Chart(ctx, {{
     return render_template_string(html)
 
 # ====================================
-# Manifest PWA
-# ====================================
-
-@app.route("/manifest.json")
-def manifest():
-
-    return {{
-
-        "name": "VAR Dashboard",
-
-        "short_name": "VAR",
-
-        "start_url": "/",
-
-        "display": "standalone",
-
-        "background_color": "#111827",
-
-        "theme_color": "#22c55e"
-
-    }}
-
-# ====================================
 # تشغيل السيرفر
 # ====================================
 
 if __name__ == "__main__":
 
-    app.run(host="0.0.0.0", port=5000)
+    port = int(os.environ.get("PORT", 5000))
+
+    app.run(host="0.0.0.0", port=port)
