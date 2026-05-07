@@ -56,49 +56,125 @@ def home():
 
     for item in latest:
 
-        cards += f"""
+       cards += f"""
 
-<div class="bg-gradient-to-br from-gray-900 to-gray-800
+<div class="relative overflow-hidden
+bg-gradient-to-br from-gray-900 via-gray-800 to-black
 p-6 rounded-3xl shadow-2xl border border-gray-700
 hover:border-green-400 transition duration-300">
 
-    <!-- Header -->
+    <!-- LIVE -->
 
-    <div class="flex justify-between items-center mb-4">
+    <div class="absolute top-4 left-4
+    bg-red-500 text-white px-3 py-1 rounded-full
+    text-sm font-bold animate-pulse shadow-lg">
 
-        <div class="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold animate-pulse">
-            🔴 LIVE
-        </div>
+        🔴 LIVE
 
-        <div class="text-gray-400 text-sm">
-            ⏰ {item.get("time","")}
-        </div>
+    </div>
+
+    <!-- Time -->
+
+    <div class="absolute top-4 right-4 text-gray-400 text-sm">
+
+        ⏰ {item.get("time","")}
 
     </div>
 
     <!-- Teams -->
 
-    <div class="grid grid-cols-3 items-center text-center mb-6">
+    <div class="grid grid-cols-3 items-center text-center mt-8">
+
+        <!-- Team 1 -->
 
         <div>
 
+            <img
+            src="https://cdn-icons-png.flaticon.com/512/53/53283.png"
+            class="w-16 mx-auto mb-3 opacity-80">
+
             <h2 class="text-2xl font-bold">
+
                 {item.get("event","").split(" vs ")[0] if "vs" in item.get("event","") else item.get("event","")}
+
             </h2>
 
         </div>
 
-        <div class="text-4xl font-extrabold text-green-400">
-
-            ⚽
-
-        </div>
+        <!-- Score -->
 
         <div>
 
+            <div class="text-6xl font-extrabold text-green-400 animate-pulse">
+
+                2 - 1
+
+            </div>
+
+            <div class="mt-3 text-yellow-400 font-bold">
+
+                ⚽ هدف 78'
+
+            </div>
+
+        </div>
+
+        <!-- Team 2 -->
+
+        <div>
+
+            <img
+            src="https://cdn-icons-png.flaticon.com/512/53/53283.png"
+            class="w-16 mx-auto mb-3 opacity-80">
+
             <h2 class="text-2xl font-bold">
+
                 {item.get("event","").split(" vs ")[1] if "vs" in item.get("event","") else ""}
+
             </h2>
+
+        </div>
+
+    </div>
+
+    <!-- Stats -->
+
+    <div class="grid grid-cols-2 gap-4 mt-8">
+
+        <!-- Possession -->
+
+        <div class="bg-gray-950 p-4 rounded-2xl border border-gray-800">
+
+            <p class="text-gray-400 mb-2">
+                📈 الاستحواذ
+            </p>
+
+            <div class="w-full bg-gray-700 rounded-full h-4 overflow-hidden">
+
+                <div class="bg-green-400 h-4 rounded-full"
+                style="width:65%"></div>
+
+            </div>
+
+            <p class="mt-2 text-sm text-gray-300">
+                65%
+            </p>
+
+        </div>
+
+        <!-- Cards -->
+
+        <div class="bg-gray-950 p-4 rounded-2xl border border-gray-800">
+
+            <p class="text-gray-400 mb-2">
+                🟨 البطاقات
+            </p>
+
+            <div class="text-2xl">
+
+                🟨 🟨 🟥
+
+            </div>
 
         </div>
 
@@ -106,13 +182,22 @@ hover:border-green-400 transition duration-300">
 
     <!-- AI Comment -->
 
-    <div class="bg-gray-950 p-4 rounded-2xl border border-gray-800">
+    <div class="bg-black/40 backdrop-blur-lg
+    p-5 rounded-2xl border border-gray-700 mt-6">
 
-        <p class="text-lg text-gray-200">
+        <p class="text-lg text-gray-200 leading-8">
 
             🤖 {item.get("reply","")}
 
         </p>
+
+    </div>
+
+    <!-- Goal Animation -->
+
+    <div class="absolute -bottom-8 -right-8 text-[120px] opacity-10 animate-bounce">
+
+        ⚽
 
     </div>
 
